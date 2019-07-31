@@ -1,13 +1,15 @@
 {
-  "name": "saindev.ru",
+  "name": "Bitrix24 reports",
   "version": "1.0.0",
   "description": "",
   "author": "SainDev",
+  "homepage": "https://saindev.github.io/",
   "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-dev-server",
-    "start": "webpack"
+    "dev": "webpack-dev-server --mode development",
+    "start": "webpack",
+    "build": "webpack -p --mode production"
   },
   "babel": {
     "presets": [
