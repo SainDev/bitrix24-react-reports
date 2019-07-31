@@ -1,7 +1,7 @@
 @import "variables";
-@import "node_modules/bootswatch/dist/Materia/variables";
+@import "~bootswatch/dist/materia/variables";
 @import "~bootstrap/scss/bootstrap";
-@import "node_modules/bootswatch/dist/Materia/bootswatch";
+@import "~bootswatch/dist/materia/bootswatch";
 
 table {
     th {
