@@ -11,7 +11,7 @@ module.exports = {
     filename: "main.js",
     chunkFilename: '[name].bundle.js'
   },
-  devtool: 'source-map',
+  //devtool: 'source-map',
   devServer: {
     contentBase: path.join(__dirname, "dist"),
     compress: true,
@@ -57,7 +57,7 @@ module.exports = {
             {
               loader: "css-loader",
               options: {
-                modules: true,
+                //modules: true, //bootstrap не пашет
                 //sourceMap: true,
                 //minimize: true,
                 //url: false

@@ -1,16 +1,19 @@
-import React, { Component } from "react";
+import React, { lazy, Suspense } from "react";
 import ReactDOM from "react-dom";
-import App from "./component/app.component";
-ReactDOM.render(<App />, document.querySelector("#root"));
+import "./scss/App.scss";
+import { Modal } from "react-bootstrap";
 
+const App = lazy(() => import("./App"));
 
-/*import React, { lazy, Suspense, Fragment } from "react";
-import ReactDOM from "react-dom";
-
-const App = lazy(() => import("./component/app.component"));
 ReactDOM.render(
-  <Suspense fallback={<p>loading....</p>}>
-    <App />
-  </Suspense>,
-  document.querySelector("#root")
-);*/
+    <Suspense fallback={
+        <Modal size="sm" aria-labelledby="contained-modal-title-vcenter" centered show onHide={() => {}}>
+            <Modal.Body>
+                <h4>Загрузка...</h4>
+            </Modal.Body>
+        </Modal>
+    }>
+        <App />
+    </Suspense>,
+    document.querySelector("#app")
+);
