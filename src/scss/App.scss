@@ -1,6 +1,18 @@
 @import "variables";
+@import "~bootswatch/dist/Materia/variables";
 @import "~bootstrap/scss/bootstrap";
+@import "~bootswatch/dist/Materia/bootswatch";
 
-.intro {
-    background-color: yellow;
+table {
+    th {
+        h4 {
+            margin-bottom: 0;
+        }
+    }
+
+    td {
+        ul {
+            margin-bottom: 0;
+        }
+    }
 }

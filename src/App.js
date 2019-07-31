@@ -27,7 +27,7 @@ export default class AppComponent extends Component {
         const currentMonth = (parseInt(this.state.currentMonth) + n);
         const beginDate = moment().month(currentMonth).endOf('month').subtract(2, 'months').format('DD.MM.YYYY');
         const closeDate = moment().month(currentMonth).startOf('month').format('DD.MM.YYYY');
-        this.setState({currentMonth, beginDate, closeDate});
+        this.setState({currentMonth, beginDate, closeDate, deals: {}, isLoaded: false});
     };
 
     toPrevMonth() {this.switch(-1);}
@@ -41,11 +41,23 @@ export default class AppComponent extends Component {
                     deals: responseData.result,
                     isLoaded: true
                 });
-            }).catch(console.log);
+            },
+            (error) => {
+                this.setState({
+                    isLoaded: true,
+                    error
+                })
+            });
     }
 
     componentDidMount() {
         this.getTasks();
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.state.currentMonth !== prevState.currentMonth) {
+            this.getTasks();
+        }
     }
 
     render() {

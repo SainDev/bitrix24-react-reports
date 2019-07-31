@@ -16,11 +16,15 @@ const Task = ({dealId}) => {
             .then((response) => response.json())
             .then((responseData) => {
                 const tasks = responseData.result.tasks;
-                //const tasks = Object.assign({}, responseData.result.tasks);
                 setTasks(tasks);
-        })
+            },
+            (error) => {
+                this.setState({
+                    isLoaded: true,
+                    error
+                })
+            });
     }
-    //console.log(tasks);
 
     if(tasks) {
         return (

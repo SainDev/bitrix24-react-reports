@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Container, Table, Navbar, Nav, Form, FormControl, Button } from "react-bootstrap";
+import { Container, Row, Col, Table, Navbar, Nav, Button } from "react-bootstrap";
 import moment from "moment";
 import Task from "./Task";
 
@@ -10,7 +10,7 @@ class DealsRow extends Component {
         return (
             <tr>
                 <td>
-                    <div>{deal.TITLE}</div>
+                    <div><h6>{deal.TITLE}</h6></div>
                     <Task dealId={deal.ID} />
                 </td>
                 <td>{parseInt(deal.OPPORTUNITY)}</td>
@@ -20,15 +20,6 @@ class DealsRow extends Component {
 }
 
 class DealsTable extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            currentMonth: moment().month()
-        };
-        //console.log(this.props);
-        //console.log(this.state);
-    }
-
     render() {
         const rows = [];
         var fullPrice = 0;
@@ -44,34 +35,34 @@ class DealsTable extends Component {
         });
 
         return (
-            <Table striped bordered hover>
-                <thead>
-                    <tr>
-                        <th colSpan="2" className="text-center">
-                            <Navbar bg="light" variant="light">
-                                <Nav className="mr-auto">
-                                    <Button as="input" type="button" value="<" onClick={this.props.toPrevMonth} />
-                                </Nav>
-                                <Navbar.Brand className="mr-auto">{moment().month(this.props.month).format('MMMM')}</Navbar.Brand>
-                                <Nav>
-                                <Button as="input" type="button" value=">" onClick={this.props.toNextMonth} />
-                                </Nav>
-                            </Navbar>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th>Название</th>
-                        <th>Цена (руб)</th>
-                    </tr>
-                </thead>
-                <tbody>{rows}</tbody>
-                <tbody>
-                    <tr>
-                        <th>Итого</th>
-                        <th>{fullPrice}</th>
-                    </tr>
-                </tbody>
-            </Table>
+            <Container>
+                <Table striped bordered hover>
+                    <thead>
+                        <tr>
+                            <th colSpan="2">
+                                <Container>
+                                    <Row>
+                                        <Col className="text-left"><Button as="input" type="button" value="<" onClick={this.props.toPrevMonth} /></Col>
+                                        <Col className="align-self-center text-center"><h4>{moment().month(this.props.month).subtract(1, 'months').format('MMMM')}</h4></Col>
+                                        <Col className="text-right"><Button as="input" type="button" value=">" onClick={this.props.toNextMonth} /></Col>
+                                    </Row>
+                                </Container>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Название</th>
+                            <th>Цена (руб)</th>
+                        </tr>
+                    </thead>
+                    <tbody>{rows}</tbody>
+                    <tbody>
+                        <tr>
+                            <th>Итого</th>
+                            <th>{fullPrice}</th>
+                        </tr>
+                    </tbody>
+                </Table>
+            </Container>
         );
     }
 }
