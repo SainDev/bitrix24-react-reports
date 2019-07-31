@@ -1,43 +1,14 @@
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require('path');
 
 module.exports = {
-    //mode: 'development',
     entry: "./src/index.js",
-    watch: true,
     output: {
         //path: path.join(__dirname, 'dist'),
-        path: path.resolve(process.cwd(), 'dist'),
+        path: path.resolve(__dirname, 'dist'),
         //publicPath: '/dist/',
         filename: "main.js",
         chunkFilename: '[name].bundle.js'
     },
-    //devtool: 'source-map',
-    devServer: {
-        contentBase: path.join(__dirname, "dist"),
-        compress: true,
-        //inline: true,
-        //host: 'localhost',
-        port: 9000,
-        watchContentBase: true,
-        progress: true
-    },
-    plugins: [
-        new CleanWebpackPlugin(),
-        new HtmlWebpackPlugin({
-            title: 'React Tasks SD',
-            template: 'src/html/index.html',
-            'meta': {
-                'viewport': 'width=device-width, initial-scale=1, shrink-to-fit=no',
-            }
-        }),
-        new MiniCssExtractPlugin({
-            filename: "[name].css",
-            chunkFilename: "[id].css"
-        })
-    ],
     module: {
         rules: [
             {
