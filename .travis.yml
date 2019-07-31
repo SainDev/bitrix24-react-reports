@@ -13,12 +13,12 @@ before_deploy:
   - echo -e "node_modules\npackage-lock.json" > .gitignore
 
 deploy:
-    provider: pages
-    local-dir: dist
-    skip-cleanup: true
-    github-token: $GITHUB_TOKEN
-    keep-history: true
-    repo: SainDev/saindev.github.io
-    target-branch: master
+  provider: pages
+  local-dir: dist
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  keep-history: true
+  repo: SainDev/saindev.github.io
+  target-branch: master
   on:
     branch: master
