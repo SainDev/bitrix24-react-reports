@@ -3,6 +3,10 @@
 @import "~bootstrap/scss/bootstrap";
 @import "~bootswatch/dist/materia/bootswatch";
 
+#app > div {
+    height: 100vh
+}
+
 table {
     th {
         h4 {

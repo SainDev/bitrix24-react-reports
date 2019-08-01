@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { Container, Row, Col, Table, Navbar, Nav, Button } from "react-bootstrap";
+import { Container, Row, Col, Table, Button } from "react-bootstrap";
 import moment from "moment";
+import Skeleton from 'react-loading-skeleton';
 import Task from "./Task";
 
 class DealsRow extends Component {
@@ -8,13 +9,19 @@ class DealsRow extends Component {
         const deal = this.props.deal;
 
         return (
-            <tr>
-                <td>
-                    <div><h6>{deal.TITLE}</h6></div>
-                    <Task dealId={deal.ID} />
-                </td>
-                <td>{parseInt(deal.OPPORTUNITY)}</td>
-            </tr>
+            Object.keys(deal).length > 0 ?
+                <tr>
+                    <td>
+                        <div><h6>{deal.TITLE}</h6></div>
+                        <Task dealId={deal.ID} />
+                    </td>
+                    <td>{parseInt(deal.OPPORTUNITY)}</td>
+                </tr>
+            :
+                <tr>
+                    <td>{this.props.isLoaded ? 'Нет данных' : <Skeleton />}</td>
+                    <td></td>
+                </tr>
         );
     }
 }
@@ -25,14 +32,23 @@ class DealsTable extends Component {
         var fullPrice = 0;
         moment.locale('ru');
 
-        this.props.deals.forEach((deal) => {
+        if (this.props.deals.length > 0) {
+            (this.props.deals).forEach((deal) => {
+                rows.push(
+                    <DealsRow
+                        deal={deal}
+                        key={deal.ID} />
+                );
+                {fullPrice += parseInt(deal.OPPORTUNITY)};
+            });
+        } else {
             rows.push(
                 <DealsRow
-                    deal={deal}
-                    key={deal.ID} />
+                    isLoaded={this.props.isLoaded}
+                    deal={{}}
+                    key={1} />
             );
-            {fullPrice += parseInt(deal.OPPORTUNITY)};
-        });
+        }
 
         return (
             <Container>
@@ -42,16 +58,16 @@ class DealsTable extends Component {
                             <th colSpan="2">
                                 <Container>
                                     <Row>
-                                        <Col className="text-left"><Button as="input" type="button" value="<" onClick={this.props.toPrevMonth} /></Col>
+                                        <Col className="text-left"><Button variant="secondary" as="input" type="button" value="<" onClick={this.props.toPrevMonth} /></Col>
                                         <Col className="align-self-center text-center"><h4>{moment().month(this.props.month).subtract(1, 'months').format('MMMM')}</h4></Col>
-                                        <Col className="text-right"><Button as="input" type="button" value=">" onClick={this.props.toNextMonth} /></Col>
+                                        <Col className="text-right"><Button variant="secondary" as="input" type="button" value=">" onClick={this.props.toNextMonth} /></Col>
                                     </Row>
                                 </Container>
                             </th>
                         </tr>
                         <tr>
                             <th>Название</th>
-                            <th>Цена (руб)</th>
+                            <th width="20%">Цена (руб)</th>
                         </tr>
                     </thead>
                     <tbody>{rows}</tbody>

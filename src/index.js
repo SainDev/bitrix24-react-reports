@@ -2,10 +2,11 @@ import React, { lazy, Suspense } from "react";
 import ReactDOM from "react-dom";
 import "./scss/App.scss";
 import { Modal } from "react-bootstrap";
+import App from "./App";
 
-const App = lazy(() => import("./App"));
+//const App = lazy(() => import("./App"));
 
-ReactDOM.render(
+/*ReactDOM.render(
     <Suspense fallback={
         <Modal size="sm" aria-labelledby="contained-modal-title-vcenter" centered show onHide={() => {}}>
             <Modal.Body>
@@ -15,5 +16,10 @@ ReactDOM.render(
     }>
         <App />
     </Suspense>,
+    document.querySelector("#app")
+);*/
+
+ReactDOM.render(
+    <App />,
     document.querySelector("#app")
 );

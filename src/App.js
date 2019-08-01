@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import moment from "moment";
-import { Modal } from "react-bootstrap";
 import { apiParams } from "./settings";
+import { Modal, Container } from "react-bootstrap";
 import DealsTable from "./component/DealsTable";
+import LoadingOverlay from 'react-loading-overlay';
 
 //import $ from 'jquery';
 //import bootstrap from 'bootstrap';
@@ -63,20 +64,25 @@ export default class AppComponent extends Component {
     render() {
         const { toPrevMonth, toNextMonth } = this;
         const { error, isLoaded, deals, currentMonth } = this.state;
-        if (error) {
-            return <div>Ошибка: {error.message}</div>;
-        } else if (!isLoaded) {
-            return (
-                <Modal size="sm" aria-labelledby="contained-modal-title-vcenter" centered show onHide={() => {}}>
-                    <Modal.Body>
-                        <h4>Загрузка...</h4>
-                    </Modal.Body>
-                </Modal>
-            );
-        } else {
-            return (
-                <DealsTable deals={deals} month={currentMonth} {...{toPrevMonth, toNextMonth}} />
-            );
-        }
+
+        return (
+            <LoadingOverlay
+                active={!isLoaded}
+                spinner
+                text='Загрузка...'
+            >
+                {
+                    error ? 
+                        <Modal size="sm" aria-labelledby="contained-modal-title-vcenter" centered show onHide={() => {}}>
+                            <Modal.Body>
+                                <div>Ошибка: {error.message}</div>
+                            </Modal.Body>
+                        </Modal>
+                    :
+                        <DealsTable deals={deals} month={currentMonth} isLoaded={isLoaded} {...{toPrevMonth, toNextMonth}} />
+                }
+            </LoadingOverlay>
+        );
+        
     }
 }
