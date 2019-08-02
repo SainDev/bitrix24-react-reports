@@ -5,17 +5,19 @@ import { Modal, Container } from "react-bootstrap";
 import DealsTable from "./component/DealsTable";
 import LoadingOverlay from 'react-loading-overlay';
 
-//import $ from 'jquery';
-//import bootstrap from 'bootstrap';
-//import popper from 'popper.js';
-
 export default class AppComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
             error: null,
             isLoaded: false,
-            deals: {},
+            table: {
+                data: [],
+                columns: [
+                    { title: 'Название', field: 'name' },
+                    { title: 'Сумма (руб)', field: 'amount' }
+                ]
+            },
             currentMonth: moment().month(),
             beginDate: moment().subtract(2, 'months').endOf('month').format('DD.MM.YYYY'),
             closeDate: moment().startOf('month').format('DD.MM.YYYY')
@@ -28,7 +30,7 @@ export default class AppComponent extends Component {
         const currentMonth = (parseInt(this.state.currentMonth) + n);
         const beginDate = moment().month(currentMonth).endOf('month').subtract(2, 'months').format('DD.MM.YYYY');
         const closeDate = moment().month(currentMonth).startOf('month').format('DD.MM.YYYY');
-        this.setState({currentMonth, beginDate, closeDate, deals: {}, isLoaded: false});
+        this.setState({currentMonth, beginDate, closeDate, isLoaded: false});
     };
 
     toPrevMonth() {this.switch(-1);}
@@ -38,16 +40,58 @@ export default class AppComponent extends Component {
         await fetch(apiParams.apiUrl + apiParams.apiKey +'/crm.deal.list/?order[BEGINDATE]=ASC&filter[%3EBEGINDATE]='+ this.state.beginDate +'&filter[%3CCLOSEDATE]='+ this.state.closeDate +'&filter[COMPANY_ID]='+ apiParams.companyID)
             .then((response) => response.json())
             .then((responseData) => {
-                this.setState({
-                    deals: responseData.result,
-                    isLoaded: true
+                let table = this.state.table;
+                table.data = [];
+
+                responseData.result.map((deal) => {
+                    table.data.push({
+                        id: deal.ID,
+                        name: deal.TITLE.trim(),
+                        amount: deal.OPPORTUNITY
+                    });
                 });
+
+                return table;
             },
             (error) => {
                 this.setState({
                     isLoaded: true,
                     error
                 })
+            }).then((table) => {
+                if (table.data.length > 0) {
+                    table.data.map((deal, i) => {
+                        fetch(apiParams.apiUrl + apiParams.apiKey +'/tasks.task.list/?filter[UF_CRM_TASK]=D_'+ deal.id)
+                            .then((response) => response.json())
+                            .then((responseData) => {
+                                table.data[i].tasks = [];
+
+                                responseData.result.tasks.map((task, j) => {
+                                    table.data[i].tasks.push({
+                                        id: task.id,
+                                        name: task.title.replace('CRM: ', '').trim()
+                                    });
+                                });
+
+                                this.setState({
+                                    table: table,
+                                    isLoaded: true
+                                });
+                            },
+                            (error) => {
+                                this.setState({
+                                    isLoaded: true,
+                                    error
+                                })
+                            });
+                    });
+                } else {
+                    this.setState({
+                        isLoaded: true
+                    })
+                }
+
+                return table;
             });
     }
 
@@ -63,7 +107,7 @@ export default class AppComponent extends Component {
 
     render() {
         const { toPrevMonth, toNextMonth } = this;
-        const { error, isLoaded, deals, currentMonth } = this.state;
+        const { error, isLoaded, table, currentMonth } = this.state;
 
         return (
             <LoadingOverlay
@@ -79,7 +123,7 @@ export default class AppComponent extends Component {
                             </Modal.Body>
                         </Modal>
                     :
-                        <DealsTable deals={deals} month={currentMonth} isLoaded={isLoaded} {...{toPrevMonth, toNextMonth}} />
+                        <DealsTable {...{isLoaded, table, currentMonth, toPrevMonth, toNextMonth}} />
                 }
             </LoadingOverlay>
         );

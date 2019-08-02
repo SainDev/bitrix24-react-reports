@@ -1,7 +1,7 @@
 import React, { lazy, Suspense } from "react";
 import ReactDOM from "react-dom";
 import "./scss/App.scss";
-import { Modal } from "react-bootstrap";
+//import { Modal } from "react-bootstrap";
 import App from "./App";
 
 //const App = lazy(() => import("./App"));
