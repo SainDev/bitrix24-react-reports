@@ -64,34 +64,32 @@ class DealsTable extends Component {
         }
 
         return (
-            <Container>
-                <Table striped bordered hover>
-                    <thead>
-                        <tr>
-                            <th colSpan="2">
-                                <Container>
-                                    <Row>
-                                        <Col className="text-left"><Button variant="secondary" as="input" type="button" value="<" onClick={this.props.toPrevMonth} /></Col>
-                                        <Col className="align-self-center text-center"><h4>{moment().month(this.props.currentMonth).subtract(1, 'months').format('MMMM')}</h4></Col>
-                                        <Col className="text-right"><Button variant="secondary" as="input" type="button" value=">" onClick={this.props.toNextMonth} /></Col>
-                                    </Row>
-                                </Container>
-                            </th>
-                        </tr>
-                        <tr>
-                            <th>Название</th>
-                            <th width="75">Цена (руб)</th>
-                        </tr>
-                    </thead>
-                    <tbody>{rows}</tbody>
-                    <tbody>
-                        <tr>
-                            <th>Итого</th>
-                            <th>{fullPrice}</th>
-                        </tr>
-                    </tbody>
-                </Table>
-            </Container>
+            <Table striped bordered hover>
+                <thead>
+                    <tr>
+                        <th colSpan="2">
+                            <Container>
+                                <Row>
+                                    <Col className="text-left"><Button variant="secondary" as="input" type="button" value="<" onClick={this.props.toPrevMonth} /></Col>
+                                    <Col className="align-self-center text-center"><h4>{moment().month(this.props.currentMonth).subtract(1, 'months').format('MMMM')}</h4></Col>
+                                    <Col className="text-right"><Button variant="secondary" as="input" type="button" value=">" onClick={this.props.toNextMonth} /></Col>
+                                </Row>
+                            </Container>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>Название</th>
+                        <th width="75">Цена (руб)</th>
+                    </tr>
+                </thead>
+                <tbody>{rows}</tbody>
+                <tbody>
+                    <tr>
+                        <th>Итого</th>
+                        <th>{fullPrice}</th>
+                    </tr>
+                </tbody>
+            </Table>
         );
     }
 }

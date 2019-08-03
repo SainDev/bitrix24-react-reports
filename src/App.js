@@ -177,9 +177,9 @@ export default class AppComponent extends Component {
                 <Header />
                 <main>
                     <Container>
-                        <Row noGutters>
+                        <Row>
                             <Col lg={3} tag="aside">
-                                <ListGroup defaultActiveKey="#link1">
+                                <ListGroup defaultActiveKey="#link1" style={{marginBottom: 20}}>
                                     <ListGroup.Item action href="#link1">
                                         Link 1
                                     </ListGroup.Item>

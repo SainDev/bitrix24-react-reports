@@ -6,7 +6,7 @@ import {
 } from 'react-bootstrap';
 
 const Header = () => (
-    <header style ={{marginBottom: 20}}>
+    <header style={{marginBottom: 20}}>
         <Navbar bg="light" expand="lg">
             <Container>
                 <Navbar.Brand href="/" style={{ width: 50 }}>
