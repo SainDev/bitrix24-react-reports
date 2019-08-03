@@ -1,9 +1,56 @@
 import React, { Component } from "react";
 import moment from "moment";
 import { apiParams } from "./settings";
-import { Modal, Container } from "react-bootstrap";
-import DealsTable from "./component/DealsTable";
+import { Modal, Container, Row, Col, ListGroup } from "react-bootstrap";
+import Header from './components/Header';
+import DealsTable from "./components/DealsTable";
 import LoadingOverlay from 'react-loading-overlay';
+
+const hashstr = s => {
+    let hash = 0;
+    if (s.length == 0) return hash;
+    for (let i = 0; i < s.length; i++) {
+        let char = s.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    return hash;
+}
+
+const cachedFetch = async (url, options) => {
+    let expiry = 5 * 60 // 5 min default
+    if (typeof options === 'number') {
+        expiry = options
+        options = undefined
+    } else if (typeof options === 'object') {
+        expiry = options.seconds || expiry
+    }
+    let cacheKey = hashstr(url)
+    let cached = localStorage.getItem(cacheKey)
+    let whenCached = localStorage.getItem(cacheKey + ':ts')
+    if (cached !== null && whenCached !== null) {
+        let age = (Date.now() - whenCached) / 1000
+        if (age < expiry) {
+            let response = new Response(new Blob([cached]))
+            return Promise.resolve(response)
+        } else {
+            localStorage.removeItem(cacheKey)
+            localStorage.removeItem(cacheKey + ':ts')
+        }
+    }
+
+    const response_1 = await fetch(url, options);
+    if (response_1.status === 200) {
+        let ct = response_1.headers.get('Content-Type');
+        if (ct && (ct.match(/application\/json/i) || ct.match(/text\//i))) {
+            response_1.clone().text().then(content => {
+                localStorage.setItem(cacheKey, content);
+                localStorage.setItem(cacheKey + ':ts', Date.now());
+            });
+        }
+    }
+    return response_1;
+}
 
 export default class AppComponent extends Component {
     constructor(props) {
@@ -37,8 +84,16 @@ export default class AppComponent extends Component {
     toNextMonth() {this.switch(1);}
 
     async getTasks() {
-        await fetch(apiParams.apiUrl + apiParams.apiKey +'/crm.deal.list/?order[BEGINDATE]=ASC&filter[%3EBEGINDATE]='+ this.state.beginDate +'&filter[%3CCLOSEDATE]='+ this.state.closeDate +'&filter[COMPANY_ID]='+ apiParams.companyID)
-            .then((response) => response.json())
+        await cachedFetch(
+                apiParams.apiUrl + apiParams.apiKey
+                + '/crm.deal.list/?order[BEGINDATE]=ASC&filter[%3EBEGINDATE]='
+                + this.state.beginDate
+                + '&filter[%3CCLOSEDATE]='
+                + this.state.closeDate
+                + '&filter[COMPANY_ID]='
+                +  apiParams.companyID
+            )
+            .then((r) => r.json())
             .then((responseData) => {
                 let table = this.state.table;
                 table.data = [];
@@ -61,8 +116,12 @@ export default class AppComponent extends Component {
             }).then((table) => {
                 if (table.data.length > 0) {
                     table.data.map((deal, i) => {
-                        fetch(apiParams.apiUrl + apiParams.apiKey +'/tasks.task.list/?filter[UF_CRM_TASK]=D_'+ deal.id)
-                            .then((response) => response.json())
+                        cachedFetch(
+                                apiParams.apiUrl + apiParams.apiKey 
+                                + '/tasks.task.list/?filter[UF_CRM_TASK]=D_'
+                                + deal.id
+                            )
+                            .then((r) => r.json())
                             .then((responseData) => {
                                 table.data[i].tasks = [];
 
@@ -115,16 +174,35 @@ export default class AppComponent extends Component {
                 spinner
                 text='Загрузка...'
             >
-                {
-                    error ? 
-                        <Modal size="sm" aria-labelledby="contained-modal-title-vcenter" centered show onHide={() => {}}>
-                            <Modal.Body>
-                                <div>Ошибка: {error.message}</div>
-                            </Modal.Body>
-                        </Modal>
-                    :
-                        <DealsTable {...{isLoaded, table, currentMonth, toPrevMonth, toNextMonth}} />
-                }
+                <Header />
+                <main>
+                    <Container>
+                        <Row noGutters>
+                            <Col lg={3} tag="aside">
+                                <ListGroup defaultActiveKey="#link1">
+                                    <ListGroup.Item action href="#link1">
+                                        Link 1
+                                    </ListGroup.Item>
+                                    <ListGroup.Item action href="#link2">
+                                        Link 2
+                                    </ListGroup.Item>
+                                </ListGroup>
+                            </Col>
+                            <Col lg={9} tag="section">
+                                {
+                                    error ? 
+                                        <Modal size="sm" aria-labelledby="contained-modal-title-vcenter" centered show onHide={() => {}}>
+                                            <Modal.Body>
+                                                <div>Ошибка: {error.message}</div>
+                                            </Modal.Body>
+                                        </Modal>
+                                    :
+                                        <DealsTable {...{isLoaded, table, currentMonth, toPrevMonth, toNextMonth}} />
+                                }
+                            </Col>
+                        </Row>
+                    </Container>
+                </main>
             </LoadingOverlay>
         );
         

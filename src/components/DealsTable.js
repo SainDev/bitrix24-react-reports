@@ -80,7 +80,7 @@ class DealsTable extends Component {
                         </tr>
                         <tr>
                             <th>Название</th>
-                            <th width="20%">Цена (руб)</th>
+                            <th width="75">Цена (руб)</th>
                         </tr>
                     </thead>
                     <tbody>{rows}</tbody>
