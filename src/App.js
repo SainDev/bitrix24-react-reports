@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import moment from "moment";
 import { apiParams } from "./settings";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { Modal, Container, Row, Col, ListGroup } from "react-bootstrap";
 import Header from './components/Header';
 import DealsTable from "./components/DealsTable";
@@ -55,6 +56,10 @@ const cachedFetch = async (url, options) => {
 export default class AppComponent extends Component {
     constructor(props) {
         super(props);
+
+        const queryString = require('query-string');
+        let queryParams = queryString.parse(location.search);
+
         this.state = {
             error: null,
             isLoaded: false,
@@ -65,10 +70,14 @@ export default class AppComponent extends Component {
                     { title: 'Сумма (руб)', field: 'amount' }
                 ]
             },
+            companyID: queryParams.cId ? queryParams.cId : 1,
             currentMonth: moment().month(),
             beginDate: moment().subtract(2, 'months').endOf('month').format('DD.MM.YYYY'),
             closeDate: moment().startOf('month').format('DD.MM.YYYY')
         };
+
+        this.switchCompany();
+
         this.toPrevMonth = this.toPrevMonth.bind(this);
         this.toNextMonth = this.toNextMonth.bind(this);
     };
@@ -79,6 +88,18 @@ export default class AppComponent extends Component {
         const closeDate = moment().month(currentMonth).startOf('month').format('DD.MM.YYYY');
         this.setState({currentMonth, beginDate, closeDate, isLoaded: false});
     };
+
+    switchCompany(companyID) {
+        let currentUrlParams = new URLSearchParams(window.location.search);
+        if (!companyID) {
+            currentUrlParams.set('cId', this.state.companyID);
+            this.props.history.push(window.location.pathname + "?" + currentUrlParams.toString());
+        } else {
+            currentUrlParams.set('cId', companyID);
+            this.props.history.push(window.location.pathname + "?" + currentUrlParams.toString());
+            this.setState({companyID, isLoaded: false});
+        }
+    }
 
     toPrevMonth() {this.switch(-1);}
     toNextMonth() {this.switch(1);}
@@ -91,7 +112,7 @@ export default class AppComponent extends Component {
                 + '&filter[%3CCLOSEDATE]='
                 + this.state.closeDate
                 + '&filter[COMPANY_ID]='
-                +  apiParams.companyID
+                +  this.state.companyID
             )
             .then((r) => r.json())
             .then((responseData) => {
@@ -159,7 +180,7 @@ export default class AppComponent extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.state.currentMonth !== prevState.currentMonth) {
+        if (this.state.currentMonth !== prevState.currentMonth || this.state.companyID !== prevState.companyID) {
             this.getTasks();
         }
     }
@@ -179,12 +200,12 @@ export default class AppComponent extends Component {
                     <Container>
                         <Row>
                             <Col lg={3} tag="aside">
-                                <ListGroup defaultActiveKey="#link1" style={{marginBottom: 20}}>
-                                    <ListGroup.Item action href="#link1">
-                                        Link 1
+                                <ListGroup style={{marginBottom: 20}}>
+                                    <ListGroup.Item action onClick={() => this.switchCompany(1)} className={this.state.companyID == 1 ? 'active' : ''}>
+                                        Мигавто
                                     </ListGroup.Item>
-                                    <ListGroup.Item action href="#link2">
-                                        Link 2
+                                    <ListGroup.Item action onClick={() => this.switchCompany(3)} className={this.state.companyID == 3 ? 'active' : ''}>
+                                        5 Колесо
                                     </ListGroup.Item>
                                 </ListGroup>
                             </Col>

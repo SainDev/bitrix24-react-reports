@@ -1,5 +1,6 @@
 import React, { lazy, Suspense } from "react";
 import ReactDOM from "react-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import "./scss/App.scss";
 //import { Modal } from "react-bootstrap";
 import App from "./App";
@@ -20,6 +21,8 @@ import App from "./App";
 );*/
 
 ReactDOM.render(
-    <App />,
+    <Router>
+        <Route path="/" component={App} />
+    </Router>,
     document.querySelector("#app")
 );
