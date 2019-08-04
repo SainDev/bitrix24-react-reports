@@ -19,7 +19,7 @@ const hashstr = s => {
 }
 
 const cachedFetch = async (url, options) => {
-    let expiry = 5 * 60 // 5 min default
+    let expiry = 30 * 60 // 30 min default
     if (typeof options === 'number') {
         expiry = options
         options = undefined
