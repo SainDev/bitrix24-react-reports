@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import moment from "moment";
 import { apiParams } from "./settings";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { Modal, Container, Row, Col, ListGroup } from "react-bootstrap";
 import Header from './components/Header';
 import DealsTable from "./components/DealsTable";
@@ -67,7 +66,7 @@ export default class AppComponent extends Component {
                 data: [],
                 columns: [
                     { title: 'Название', field: 'name' },
-                    { title: 'Сумма (руб)', field: 'amount' }
+                    { title: 'Сумма (руб)', field: 'price' }
                 ]
             },
             companyID: queryParams.cId ? queryParams.cId : 1,
@@ -123,7 +122,7 @@ export default class AppComponent extends Component {
                     table.data.push({
                         id: deal.ID,
                         name: deal.TITLE.trim(),
-                        amount: deal.OPPORTUNITY
+                        price: parseInt(deal.OPPORTUNITY)
                     });
                 });
 
@@ -149,7 +148,8 @@ export default class AppComponent extends Component {
                                 responseData.result.tasks.map((task, j) => {
                                     table.data[i].tasks.push({
                                         id: task.id,
-                                        name: task.title.replace('CRM: ', '').trim()
+                                        name: task.title.replace('CRM: ', '').trim(),
+                                        time: task.timeSpentInLogs ? new Date(task.timeSpentInLogs * 1000).toISOString().substr(11, 8) : null
                                     });
                                 });
 

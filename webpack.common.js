@@ -1,3 +1,5 @@
+const webpack = require('webpack');
+const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 const path = require('path');
 
 module.exports = {
@@ -8,6 +10,11 @@ module.exports = {
         filename: "main.js",
         chunkFilename: '[name].bundle.js'
     },
+    plugins: [
+        new MomentLocalesPlugin({
+            localesToKeep: ['ru'],
+        }),
+    ],
     module: {
         rules: [
             {

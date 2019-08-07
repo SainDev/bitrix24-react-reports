@@ -35,7 +35,7 @@ module.exports = merge(common, {
                 default: false,
                 commons: {
                     test: /[\\/]node_modules[\\/]/,
-                    name: 'vendor_app',
+                    name: 'vendor',
                     chunks: 'all',
                     minChunks: 2
                 }

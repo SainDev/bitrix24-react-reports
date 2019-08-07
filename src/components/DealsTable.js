@@ -15,16 +15,19 @@ class DealsRow extends Component {
                             <div><strong>{this.props.deal.name}</strong></div>
                             {
                                 tasks.length >= 1 && tasks[0].name.localeCompare(this.props.deal.name) !== 0 ?
-                                    <ul>
+                                    <ul className="list-group">
                                         {tasks.map(task => (
-                                            <li key={task.id}>{task.name}</li>
+                                            <li className="list-group-item d-flex justify-content-between align-items-center" key={task.id}>
+                                                {task.name}
+                                                {task.time ? <span className="badge badge-primary badge-pill">{task.time}</span> : null}
+                                            </li>
                                         ))}
                                     </ul>
                                 :
                                     null
                             }
                         </td>
-                        <td>{parseInt(this.props.deal.amount)}</td>
+                        <td>{parseInt(this.props.deal.price)}</td>
                     </tr>
                 :
                     <tr>
@@ -52,7 +55,7 @@ class DealsTable extends Component {
                         deal={deal}
                         key={i} />
                 );
-                {fullPrice += parseInt(deal.amount)};
+                {fullPrice += parseInt(deal.price)};
             });
         } else {
             rows.push(
@@ -64,7 +67,7 @@ class DealsTable extends Component {
         }
 
         return (
-            <Table striped bordered hover>
+            <Table bordered>
                 <thead>
                     <tr>
                         <th colSpan="2">
@@ -78,8 +81,8 @@ class DealsTable extends Component {
                         </th>
                     </tr>
                     <tr>
-                        <th>Название</th>
-                        <th width="75">Цена (руб)</th>
+                        <th className="align-middle"><strong>Название</strong></th>
+                        <th className="align-middle" width="75"><strong>Цена (руб)</strong></th>
                     </tr>
                 </thead>
                 <tbody>{rows}</tbody>
