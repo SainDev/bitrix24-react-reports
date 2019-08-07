@@ -66,6 +66,7 @@ export default class AppComponent extends Component {
                 data: [],
                 columns: [
                     { title: 'Название', field: 'name' },
+                    { title: 'Затраченное время', field: 'timeFull' },
                     { title: 'Сумма (руб)', field: 'price' }
                 ]
             },
@@ -144,8 +145,13 @@ export default class AppComponent extends Component {
                             .then((r) => r.json())
                             .then((responseData) => {
                                 table.data[i].tasks = [];
+                                table.data[i].timeFull = 0;
 
                                 responseData.result.tasks.map((task, j) => {
+                                    if (task.timeSpentInLogs) {
+                                        table.data[i].timeFull += parseInt(task.timeSpentInLogs);
+                                    }
+
                                     table.data[i].tasks.push({
                                         id: task.id,
                                         name: task.title.replace('CRM: ', '').trim(),

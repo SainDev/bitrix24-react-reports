@@ -27,15 +27,16 @@ class DealsRow extends Component {
                                     null
                             }
                         </td>
+                        <td className="text-center">{this.props.dealTimeFormatted}</td>
                         <td>{parseInt(this.props.deal.price)}</td>
                     </tr>
                 :
                     <tr>
-                        <td colSpan="2">Нет данных</td>
+                        <td colSpan="3">Нет данных</td>
                     </tr>
             :
                 <tr>
-                    <td colSpan="2"><Skeleton /></td>
+                    <td colSpan="3"><Skeleton /></td>
                 </tr>
         );
     }
@@ -43,19 +44,29 @@ class DealsRow extends Component {
 
 class DealsTable extends Component {
     render() {
+        moment.locale('ru');
         const rows = [];
         let fullPrice = 0;
-        moment.locale('ru');
+        let fullTime = 0;
 
         if (this.props.table.data.length > 0) {
             this.props.table.data.map((deal, i) => {
+                let dealTimeFormatted = null;
+
+                if (deal.timeFull) {
+                    dealTimeFormatted = new Date(deal.timeFull * 1000).toISOString().substr(11, 8);
+                    fullTime += parseInt(deal.timeFull);
+                }
+
                 rows.push(
                     <DealsRow
                         isLoaded={this.props.isLoaded}
                         deal={deal}
+                        dealTimeFormatted={dealTimeFormatted}
                         key={i} />
                 );
-                {fullPrice += parseInt(deal.price)};
+
+                fullPrice += parseInt(deal.price);
             });
         } else {
             rows.push(
@@ -70,7 +81,7 @@ class DealsTable extends Component {
             <Table bordered>
                 <thead>
                     <tr>
-                        <th colSpan="2">
+                        <th colSpan="3">
                             <Container>
                                 <Row>
                                     <Col className="text-left"><Button variant="secondary" as="input" type="button" value="<" onClick={this.props.toPrevMonth} /></Col>
@@ -82,6 +93,7 @@ class DealsTable extends Component {
                     </tr>
                     <tr>
                         <th className="align-middle"><strong>Название</strong></th>
+                        <th className="align-middle" width="110"><strong>Затраченное время</strong></th>
                         <th className="align-middle" width="75"><strong>Цена (руб)</strong></th>
                     </tr>
                 </thead>
@@ -89,6 +101,7 @@ class DealsTable extends Component {
                 <tbody>
                     <tr>
                         <th>Итого</th>
+                        <th className="text-center">{fullTime ? new Date(fullTime * 1000).toISOString().substr(11, 8) : null}</th>
                         <th>{fullPrice}</th>
                     </tr>
                 </tbody>
