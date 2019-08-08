@@ -62,6 +62,7 @@ export default class AppComponent extends Component {
         this.state = {
             error: null,
             isLoaded: false,
+            hoursRate: 1000,
             table: {
                 data: [],
                 columns: [
@@ -82,27 +83,29 @@ export default class AppComponent extends Component {
         this.toNextMonth = this.toNextMonth.bind(this);
     };
 
-    switch(n) {
+    switchCompany(companyID) {
+        if (this.state.companyID !== companyID) {
+            let currentUrlParams = new URLSearchParams(window.location.search);
+            if (!companyID) {
+                currentUrlParams.set('cId', this.state.companyID);
+                this.props.history.push(window.location.pathname + "?" + currentUrlParams.toString());
+            } else {
+                currentUrlParams.set('cId', companyID);
+                this.props.history.push(window.location.pathname + "?" + currentUrlParams.toString());
+                this.setState({companyID, isLoaded: false});
+            }
+        }
+    }
+
+    switchMonth(n) {
         const currentMonth = (parseInt(this.state.currentMonth) + n);
         const beginDate = moment().month(currentMonth).endOf('month').subtract(2, 'months').format('DD.MM.YYYY');
         const closeDate = moment().month(currentMonth).startOf('month').format('DD.MM.YYYY');
         this.setState({currentMonth, beginDate, closeDate, isLoaded: false});
     };
 
-    switchCompany(companyID) {
-        let currentUrlParams = new URLSearchParams(window.location.search);
-        if (!companyID) {
-            currentUrlParams.set('cId', this.state.companyID);
-            this.props.history.push(window.location.pathname + "?" + currentUrlParams.toString());
-        } else {
-            currentUrlParams.set('cId', companyID);
-            this.props.history.push(window.location.pathname + "?" + currentUrlParams.toString());
-            this.setState({companyID, isLoaded: false});
-        }
-    }
-
-    toPrevMonth() {this.switch(-1);}
-    toNextMonth() {this.switch(1);}
+    toPrevMonth() {this.switchMonth(-1);}
+    toNextMonth() {this.switchMonth(1);}
 
     async getTasks() {
         await cachedFetch(
@@ -155,9 +158,16 @@ export default class AppComponent extends Component {
                                     table.data[i].tasks.push({
                                         id: task.id,
                                         name: task.title.replace('CRM: ', '').trim(),
-                                        time: task.timeSpentInLogs ? new Date(task.timeSpentInLogs * 1000).toISOString().substr(11, 8) : null
+                                        time: task.timeSpentInLogs ? new Date(task.timeSpentInLogs * 1000).toISOString().substr(11, 8) : null,
                                     });
                                 });
+
+                                table.data[i].hours = table.data[i].timeFull/3600;
+                                table.data[i].priceByHours = table.data[i].hours <= 0 || table.data[i].name.substr(0, 9).localeCompare('Поддержка') == 0 ?
+                                        table.data[i].price
+                                    :
+                                        Math.round((table.data[i].hours * parseInt(this.state.hoursRate)) / 10) * 10
+                                    ;
 
                                 this.setState({
                                     table: table,

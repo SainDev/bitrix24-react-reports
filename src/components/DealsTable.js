@@ -28,7 +28,17 @@ class DealsRow extends Component {
                             }
                         </td>
                         <td className="text-center">{this.props.dealTimeFormatted}</td>
-                        <td>{parseInt(this.props.deal.price)}</td>
+                        <td>
+                            {
+                                moment().month(this.props.currentMonth).subtract(1, 'months').isBefore('2019-08-01') ? 
+                                        this.props.deal.price 
+                                    : 
+                                        this.props.deal.priceByHours ? 
+                                            this.props.deal.priceByHours 
+                                        : 
+                                            0
+                            }
+                        </td>
                     </tr>
                 :
                     <tr>
@@ -47,6 +57,7 @@ class DealsTable extends Component {
         moment.locale('ru');
         const rows = [];
         let fullPrice = 0;
+        let fullPriceByHours = 0;
         let fullTime = 0;
 
         if (this.props.table.data.length > 0) {
@@ -63,10 +74,14 @@ class DealsTable extends Component {
                         isLoaded={this.props.isLoaded}
                         deal={deal}
                         dealTimeFormatted={dealTimeFormatted}
+                        currentMonth={this.props.currentMonth}
                         key={i} />
                 );
 
                 fullPrice += parseInt(deal.price);
+                if (deal.priceByHours) {
+                    fullPriceByHours += parseInt(deal.priceByHours);
+                }
             });
         } else {
             rows.push(
@@ -102,7 +117,14 @@ class DealsTable extends Component {
                     <tr>
                         <th>Итого</th>
                         <th className="text-center">{fullTime ? new Date(fullTime * 1000).toISOString().substr(11, 8) : null}</th>
-                        <th>{fullPrice}</th>
+                        <th>
+                            {
+                                moment().month(this.props.currentMonth).subtract(1, 'months').isBefore('2019-07-01') ? 
+                                    fullPrice
+                                : 
+                                    fullPriceByHours
+                            }
+                        </th>
                     </tr>
                 </tbody>
             </Table>
