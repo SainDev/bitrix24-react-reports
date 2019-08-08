@@ -119,7 +119,7 @@ class DealsTable extends Component {
                         <th className="text-center">{fullTime ? new Date(fullTime * 1000).toISOString().substr(11, 8) : null}</th>
                         <th>
                             {
-                                moment().month(this.props.currentMonth).subtract(1, 'months').isBefore('2019-07-01') ? 
+                                moment().month(this.props.currentMonth).subtract(1, 'months').isBefore('2019-08-01') ? 
                                     fullPrice
                                 : 
                                     fullPriceByHours
