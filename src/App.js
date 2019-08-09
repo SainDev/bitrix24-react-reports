@@ -159,6 +159,7 @@ export default class AppComponent extends Component {
                                         id: task.id,
                                         name: task.title.replace('CRM: ', '').trim(),
                                         time: task.timeSpentInLogs ? new Date(task.timeSpentInLogs * 1000).toISOString().substr(11, 8) : null,
+                                        status: task.status,
                                     });
                                 });
 
@@ -166,6 +167,7 @@ export default class AppComponent extends Component {
                                 table.data[i].priceByHours = table.data[i].hours <= 0 || table.data[i].name.substr(0, 9).localeCompare('Поддержка') == 0 ?
                                         table.data[i].price
                                     :
+                                        //Округление до десятков
                                         Math.round((table.data[i].hours * parseInt(this.state.hoursRate)) / 10) * 10
                                     ;
 

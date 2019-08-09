@@ -6,6 +6,15 @@ import Skeleton from 'react-loading-skeleton';
 class DealsRow extends Component {
     render() {
         const tasks = this.props.deal.tasks || [];
+        const statusClasses = {
+            1: '',
+            2: '',
+            3: 'text-primary',
+            4: '',
+            5: 'text-success',
+            6: '',
+            7: ''
+        };
 
         return (
             this.props.isLoaded ?
@@ -17,7 +26,7 @@ class DealsRow extends Component {
                                 tasks.length >= 1 && tasks[0].name.localeCompare(this.props.deal.name) !== 0 ?
                                     <ul className="list-group">
                                         {tasks.map(task => (
-                                            <li className="list-group-item d-flex justify-content-between align-items-center" key={task.id}>
+                                            <li className={"list-group-item d-flex justify-content-between align-items-center " + statusClasses[task.status]} key={task.id}>
                                                 {task.name}
                                                 {task.time ? <span className="badge badge-primary badge-pill">{task.time}</span> : null}
                                             </li>
@@ -31,10 +40,10 @@ class DealsRow extends Component {
                         <td>
                             {
                                 moment().month(this.props.currentMonth).subtract(1, 'months').isBefore('2019-08-01') ? 
-                                        this.props.deal.price 
+                                        <abbr title={this.props.dealTimeFormatted}>{this.props.deal.price}</abbr> 
                                     : 
                                         this.props.deal.priceByHours ? 
-                                            this.props.deal.priceByHours 
+                                            <abbr title={this.props.dealTimeFormatted}>{this.props.deal.priceByHours}</abbr> 
                                         : 
                                             0
                             }
