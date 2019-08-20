@@ -108,9 +108,9 @@ class DealsTable extends Component {
                         <th colSpan="3">
                             <Container>
                                 <Row>
-                                    <Col className="text-left"><Button variant="secondary" as="input" type="button" value="<" onClick={this.props.toPrevMonth} /></Col>
+                                    <Col className="text-left"><Button variant="secondary" href="#" onClick={this.props.toPrevMonth} >{'<'}</Button></Col>
                                     <Col className="align-self-center text-center"><h4>{moment().month(this.props.currentMonth).subtract(1, 'months').format('MMMM')}</h4></Col>
-                                    <Col className="text-right"><Button variant="secondary" as="input" type="button" value=">" onClick={this.props.toNextMonth} /></Col>
+                                    <Col className="text-right"><Button variant="secondary" href="#" onClick={this.props.toNextMonth} >{'>'}</Button></Col>
                                 </Row>
                             </Container>
                         </th>
