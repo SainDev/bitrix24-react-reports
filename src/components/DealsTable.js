@@ -2,18 +2,23 @@ import React, { Component } from "react";
 import { Container, Row, Col, Table, Button } from "react-bootstrap";
 import moment from "moment";
 import Skeleton from 'react-loading-skeleton';
+import Done from '@material-ui/icons/Done';
+import Pause from '@material-ui/icons/Pause';
+import PlayArrow from '@material-ui/icons/PlayArrow';
+import ChevronLeft from '@material-ui/icons/ChevronLeft';
+import ChevronRight from '@material-ui/icons/ChevronRight';
 
 class DealsRow extends Component {
     render() {
         const tasks = this.props.deal.tasks || [];
-        const statusClasses = {
-            1: '',
-            2: '',
-            3: 'text-primary',
-            4: '',
-            5: 'text-success',
-            6: '',
-            7: ''
+        const statuses = {
+            1: null,
+            2: <Pause className="text-warning" />,
+            3: <PlayArrow className="text-primary" />,
+            4: null,
+            5: <Done className="text-success" />,
+            6: null,
+            7: null
         };
 
         return (
@@ -24,11 +29,12 @@ class DealsRow extends Component {
                             <div><strong>{this.props.deal.name}</strong></div>
                             {
                                 tasks.length >= 1 && tasks[0].name.localeCompare(this.props.deal.name) !== 0 ?
-                                    <ul className="list-group">
+                                    <ul className="list-group tasks">
                                         {tasks.map(task => (
-                                            <li className={"list-group-item d-flex justify-content-between align-items-center " + statusClasses[task.status]} key={task.id}>
-                                                {task.name}
-                                                {task.time ? <span className="badge badge-primary badge-pill">{task.time}</span> : null}
+                                            <li className="list-group-item d-flex justify-content-between align-items-center" key={task.id}>
+                                                <div>{task.name}</div>
+                                                {task.time ? <span className="badge badge-primary badge-pill d-none d-sm-inline">{task.time}</span> : null}
+                                                {statuses[task.status] ? <span className="badge badge-light badge-pill status">{statuses[task.status]}</span> : null}
                                             </li>
                                         ))}
                                     </ul>
@@ -108,9 +114,9 @@ class DealsTable extends Component {
                         <th colSpan="3">
                             <Container>
                                 <Row>
-                                    <Col className="text-left"><Button variant="secondary" href="#" onClick={this.props.toPrevMonth} >{'<'}</Button></Col>
+                                    <Col className="text-left"><Button variant="secondary" href="#" onClick={this.props.toPrevMonth} ><ChevronLeft fontSize="small" /></Button></Col>
                                     <Col className="align-self-center text-center"><h4>{moment().month(this.props.currentMonth).subtract(1, 'months').format('MMMM')}</h4></Col>
-                                    <Col className="text-right"><Button variant="secondary" href="#" onClick={this.props.toNextMonth} >{'>'}</Button></Col>
+                                    <Col className="text-right"><Button variant="secondary" href="#" onClick={this.props.toNextMonth} ><ChevronRight fontSize="small" /></Button></Col>
                                 </Row>
                             </Container>
                         </th>

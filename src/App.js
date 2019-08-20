@@ -147,7 +147,7 @@ export default class AppComponent extends Component {
                     table.data.map((deal, i) => {
                         cachedFetch(
                                 apiParams.apiUrl + apiParams.apiKey 
-                                + '/tasks.task.list/?filter[UF_CRM_TASK]=D_'
+                                + '/tasks.task.list/?order[REAL_STATUS]=ASC&filter[UF_CRM_TASK]=D_'
                                 + deal.id
                             )
                             .then((r) => r.json())
