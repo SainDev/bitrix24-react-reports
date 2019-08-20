@@ -23,14 +23,20 @@ table {
                 li {
                     padding-right: 2.75rem;
 
-                    .status {
-                        position: absolute;
-                        right: .5rem;
-
-                        .MuiSvgIcon-root {
-                            font-size: 1rem;
+                    .badge {
+                        &.status {
+                            position: absolute;
+                            right: .5rem;
                         }
                     }
+                }
+            }
+        }
+
+        .badge {
+            &.status {
+                .MuiSvgIcon-root {
+                    font-size: 1rem;
                 }
             }
         }

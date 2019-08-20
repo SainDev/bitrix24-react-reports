@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import moment from "moment";
+import { Modal, Container, Row, Col } from "react-bootstrap";
+import LoadingOverlay from 'react-loading-overlay';
 import { apiParams } from "./settings";
-import { Modal, Container, Row, Col, ListGroup } from "react-bootstrap";
 import Header from './components/Header';
 import DealsTable from "./components/DealsTable";
-import LoadingOverlay from 'react-loading-overlay';
 
 const hashstr = s => {
     let hash = 0;
