@@ -40,10 +40,10 @@ class DealsRow extends Component {
                         <td>
                             {
                                 moment().month(this.props.currentMonth).subtract(1, 'months').isBefore('2019-08-01') ? 
-                                        <abbr title={this.props.dealTimeFormatted}>{this.props.deal.price}</abbr> 
+                                        this.props.deal.price
                                     : 
                                         this.props.deal.priceByHours ? 
-                                            <abbr title={this.props.dealTimeFormatted}>{this.props.deal.priceByHours}</abbr> 
+                                            this.props.deal.priceByHours
                                         : 
                                             0
                             }

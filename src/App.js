@@ -79,6 +79,8 @@ export default class AppComponent extends Component {
 
         this.switchCompany();
 
+        this.toMigavto = this.toMigavto.bind(this);
+        this.to5koleso = this.to5koleso.bind(this);
         this.toPrevMonth = this.toPrevMonth.bind(this);
         this.toNextMonth = this.toNextMonth.bind(this);
     };
@@ -97,6 +99,9 @@ export default class AppComponent extends Component {
         }
     }
 
+    toMigavto() {this.switchCompany(1)}
+    to5koleso() {this.switchCompany(3)}
+
     switchMonth(n) {
         const currentMonth = (parseInt(this.state.currentMonth) + n);
         const beginDate = moment().month(currentMonth).endOf('month').subtract(2, 'months').format('DD.MM.YYYY');
@@ -107,15 +112,15 @@ export default class AppComponent extends Component {
     toPrevMonth() {this.switchMonth(-1);}
     toNextMonth() {this.switchMonth(1);}
 
-    async getTasks() {
+    async getTasks(beginDate, closeDate, companyID) {
         await cachedFetch(
                 apiParams.apiUrl + apiParams.apiKey
                 + '/crm.deal.list/?order[BEGINDATE]=ASC&filter[%3EBEGINDATE]='
-                + this.state.beginDate
+                + (beginDate ? beginDate : this.state.beginDate)
                 + '&filter[%3CCLOSEDATE]='
-                + this.state.closeDate
+                + (closeDate ? closeDate : this.state.closeDate)
                 + '&filter[COMPANY_ID]='
-                +  this.state.companyID
+                +  (companyID ? companyID : this.state.companyID)
             )
             .then((r) => r.json())
             .then((responseData) => {
@@ -204,8 +209,8 @@ export default class AppComponent extends Component {
     }
 
     render() {
-        const { toPrevMonth, toNextMonth } = this;
-        const { error, isLoaded, table, currentMonth } = this.state;
+        const { toPrevMonth, toNextMonth, toMigavto, to5koleso } = this;
+        const { error, isLoaded, table, currentMonth, companyID } = this.state;
 
         return (
             <LoadingOverlay
@@ -213,21 +218,11 @@ export default class AppComponent extends Component {
                 spinner
                 text='Загрузка...'
             >
-                <Header />
+                <Header {...{toMigavto, to5koleso, companyID}} />
                 <main>
                     <Container>
                         <Row>
-                            <Col lg={3} tag="aside">
-                                <ListGroup style={{marginBottom: 20}}>
-                                    <ListGroup.Item action onClick={() => this.switchCompany(1)} className={this.state.companyID == 1 ? 'active' : ''}>
-                                        Мигавто
-                                    </ListGroup.Item>
-                                    <ListGroup.Item action onClick={() => this.switchCompany(3)} className={this.state.companyID == 3 ? 'active' : ''}>
-                                        5 Колесо
-                                    </ListGroup.Item>
-                                </ListGroup>
-                            </Col>
-                            <Col lg={9} tag="section">
+                            <Col lg={12} tag="section">
                                 {
                                     error ? 
                                         <Modal size="sm" aria-labelledby="contained-modal-title-vcenter" centered show onHide={() => {}}>
