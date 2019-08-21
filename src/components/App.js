@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import moment from "moment";
 import { Modal, Container, Row, Col } from "react-bootstrap";
 import LoadingOverlay from 'react-loading-overlay';
-import { apiParams } from "./settings";
-import Header from './components/Header';
-import DealsTable from "./components/DealsTable";
+import { apiParams } from "../settings";
+import Header from './Header';
+import DealsTable from "./DealsTable";
 
 const hashstr = s => {
     let hash = 0;
@@ -71,36 +71,14 @@ export default class AppComponent extends Component {
                     { title: 'Сумма (руб)', field: 'price' }
                 ]
             },
-            companyID: queryParams.cId ? queryParams.cId : 1,
             currentMonth: moment().month(),
             beginDate: moment().subtract(2, 'months').endOf('month').format('DD.MM.YYYY'),
             closeDate: moment().startOf('month').format('DD.MM.YYYY')
         };
 
-        this.switchCompany();
-
-        this.toMigavto = this.toMigavto.bind(this);
-        this.to5koleso = this.to5koleso.bind(this);
         this.toPrevMonth = this.toPrevMonth.bind(this);
         this.toNextMonth = this.toNextMonth.bind(this);
     };
-
-    switchCompany(companyID) {
-        if (this.state.companyID !== companyID) {
-            let currentUrlParams = new URLSearchParams(window.location.search);
-            if (!companyID) {
-                currentUrlParams.set('cId', this.state.companyID);
-                this.props.history.push(window.location.pathname + "?" + currentUrlParams.toString());
-            } else {
-                currentUrlParams.set('cId', companyID);
-                this.props.history.push(window.location.pathname + "?" + currentUrlParams.toString());
-                this.setState({companyID, isLoaded: false});
-            }
-        }
-    }
-
-    toMigavto() {this.switchCompany(1)}
-    to5koleso() {this.switchCompany(3)}
 
     switchMonth(n) {
         const currentMonth = (parseInt(this.state.currentMonth) + n);
@@ -112,7 +90,7 @@ export default class AppComponent extends Component {
     toPrevMonth() {this.switchMonth(-1);}
     toNextMonth() {this.switchMonth(1);}
 
-    async getTasks(beginDate, closeDate, companyID) {
+    async getTasks(beginDate, closeDate) {
         await cachedFetch(
                 apiParams.apiUrl + apiParams.apiKey
                 + '/crm.deal.list/?order[BEGINDATE]=ASC&filter[%3EBEGINDATE]='
@@ -120,7 +98,7 @@ export default class AppComponent extends Component {
                 + '&filter[%3CCLOSEDATE]='
                 + (closeDate ? closeDate : this.state.closeDate)
                 + '&filter[COMPANY_ID]='
-                +  (companyID ? companyID : this.state.companyID)
+                +  localStorage.getItem('cId')
             )
             .then((r) => r.json())
             .then((responseData) => {
@@ -159,7 +137,6 @@ export default class AppComponent extends Component {
                                     if (task.timeSpentInLogs) {
                                         table.data[i].timeFull += parseInt(task.timeSpentInLogs);
                                     }
-
                                     table.data[i].tasks.push({
                                         id: task.id,
                                         name: task.title.replace('CRM: ', '').trim(),
@@ -203,14 +180,14 @@ export default class AppComponent extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.state.currentMonth !== prevState.currentMonth || this.state.companyID !== prevState.companyID) {
+        if (this.state.currentMonth !== prevState.currentMonth) {
             this.getTasks();
         }
     }
 
     render() {
         const { toPrevMonth, toNextMonth, toMigavto, to5koleso } = this;
-        const { error, isLoaded, table, currentMonth, companyID } = this.state;
+        const { error, isLoaded, table, currentMonth } = this.state;
 
         return (
             <LoadingOverlay
@@ -218,7 +195,7 @@ export default class AppComponent extends Component {
                 spinner
                 text='Загрузка...'
             >
-                <Header {...{toMigavto, to5koleso, companyID}} />
+                <Header />
                 <main>
                     <Container>
                         <Row>

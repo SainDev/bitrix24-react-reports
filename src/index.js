@@ -1,12 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter as Router, Route } from "react-router-dom";
 import "./scss/App.scss";
-import App from "./App";
+import auth from "./components/Auth";
+import App from "./components/App";
+import Login from "./components/Login";
 
 ReactDOM.render(
-    <Router>
-        <Route path="/" component={App} />
-    </Router>,
+    auth.isAuthenticated() ?
+        <App />
+    :
+        <Login />
+    ,
     document.querySelector("#app")
 );

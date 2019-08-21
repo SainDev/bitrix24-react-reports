@@ -5,7 +5,7 @@ import {
     Container, Navbar, Nav
 } from 'react-bootstrap';
 
-const Header = ({toMigavto, to5koleso, companyID}) => (
+const Header = () => (
     <header style={{marginBottom: 20}}>
         <Navbar bg="light" expand="lg">
             <Container>
@@ -15,8 +15,8 @@ const Header = ({toMigavto, to5koleso, companyID}) => (
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
-                        <Nav.Link eventKey="1" href="#" active={companyID == 1 ? true : false} onClick={toMigavto}>Мигавто</Nav.Link>
-                        <Nav.Link eventKey="3" href="#" active={companyID == 3 ? true : false} onClick={to5koleso}>5 Колесо</Nav.Link>
+                        {/*<Nav.Link eventKey="1" href="#" active={companyID == 1 ? true : false} onClick={toMigavto}>Мигавто</Nav.Link>
+                        <Nav.Link eventKey="3" href="#" active={companyID == 3 ? true : false} onClick={to5koleso}>5 Колесо</Nav.Link>*/}
                     </Nav>
                 </Navbar.Collapse>
             </Container>
