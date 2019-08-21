@@ -32,10 +32,12 @@
     "precss": "^4.0.0",
     "sass-loader": "^7.2.0",
     "style-loader": "^1.0.0",
+    "sw-precache-webpack-plugin": "^0.11.5",
     "terser-webpack-plugin": "^1.4.1",
     "webpack": "^4.39.2",
     "webpack-cli": "^3.3.7",
     "webpack-dev-server": "^3.8.0",
+    "webpack-manifest-plugin": "^2.0.4",
     "webpack-merge": "^4.2.1"
   },
   "dependencies": {
