@@ -3,6 +3,7 @@ const merge = require('webpack-merge');
 const MinifyPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const common = require('./webpack.common.js');
 
@@ -49,10 +50,18 @@ module.exports = merge(common, {
             },
         }),
         new CleanWebpackPlugin(),
+        new CopyWebpackPlugin([
+            { from: 'src/assets', to: 'assets' },
+        ]),
         new HtmlWebpackPlugin({
-            title: 'React Tasks SD',
+            title: 'Отчеты SainDev',
             template: 'src/html/index.html',
             'meta': {
+                'mobile-web-app-capable': 'yes',
+                'apple-mobile-web-app-capable': 'yes',
+                'application-name': 'Отчеты SainDev',
+                'apple-mobile-web-app-title': 'Отчеты SainDev',
+                'msapplication-starturl': '/',
                 'viewport': 'width=device-width, initial-scale=1, shrink-to-fit=no',
             }
         }),
