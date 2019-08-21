@@ -9,8 +9,9 @@ const Header = () => (
     <header style={{marginBottom: 20}}>
         <Navbar bg="light" expand="lg">
             <Container>
-                <Navbar.Brand href="/" style={{ width: 50 }}>
-                    <img src={logo} alt="logo" className="position-relative img-fluid" />
+                <Navbar.Brand href="/" style={{ width: 50, fontSize: '1rem' }}>
+                    <img src={logo} alt="logo" className="d-inline-block align-middle" />
+                    {'Отчеты по задачам SainDev'}
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
