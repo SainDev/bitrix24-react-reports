@@ -4,6 +4,7 @@ import "./scss/App.scss";
 import auth from "./components/Auth";
 import App from "./components/App";
 import Login from "./components/Login";
+import registerServiceWorker from './registerServiceWorker';
 
 ReactDOM.render(
     auth.isAuthenticated() ?
@@ -13,3 +14,5 @@ ReactDOM.render(
     ,
     document.querySelector("#app")
 );
+
+registerServiceWorker();
