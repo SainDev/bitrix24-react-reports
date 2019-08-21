@@ -5,8 +5,8 @@ import auth from "./Auth";
 const Login = () => {
     return (
         <Container>
-            <Row className="justify-content-sm-center">
-                <Col xs sm="6" lg="4" style={{marginTop: 20}}>
+            <Row className="justify-content-sm-center align-items-center">
+                <Col xs sm="6" lg="4">
                     <Card className="text-center">
                         <Card.Header>Вход</Card.Header>
                         <Card.Body>

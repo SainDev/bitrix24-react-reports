@@ -4,7 +4,13 @@
 @import "~bootswatch/dist/materia/bootswatch";
 
 #app > div {
-    height: 100vh
+    height: 100vh;
+
+    .row {
+        &.align-items-center {
+            min-height: 100vh;
+        }
+    }
 }
 
 table {
