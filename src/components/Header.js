@@ -13,13 +13,13 @@ const Header = () => (
                     <img src={logo} alt="logo" className="d-inline-block align-middle" />
                     {'Отчеты по задачам SainDev'}
                 </Navbar.Brand>
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                {/*<Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
-                        {/*<Nav.Link eventKey="1" href="#" active={companyID == 1 ? true : false} onClick={toMigavto}>Мигавто</Nav.Link>
-                        <Nav.Link eventKey="3" href="#" active={companyID == 3 ? true : false} onClick={to5koleso}>5 Колесо</Nav.Link>*/}
+                        <Nav.Link eventKey="1" href="#" active={companyID == 1 ? true : false} onClick={toMigavto}>Мигавто</Nav.Link>
+                        <Nav.Link eventKey="3" href="#" active={companyID == 3 ? true : false} onClick={to5koleso}>5 Колесо</Nav.Link>
                     </Nav>
-                </Navbar.Collapse>
+                </Navbar.Collapse>*/}
             </Container>
         </Navbar>
     </header>

@@ -25,27 +25,29 @@ class DealsRow extends Component {
         return (
             this.props.isLoaded ?
                 Object.keys(this.props.deal).length > 0 ?
-                    <tr>
-                        <td>
-                            <div className="d-flex justify-content-between align-items-center">
-                                <strong>{this.props.deal.name}</strong>
-                                {tasks.length == 1 && statuses[tasks[0].status] ? <span className="badge badge-light badge-pill status">{statuses[tasks[0].status]}</span> : null}
-                            </div>
-                            <Tasks dealName={this.props.deal.name} {...{tasks, statuses}} />
-                        </td>
-                        <td className="text-center">{this.props.dealTimeFormatted}</td>
-                        <td className="text-center">
-                            {
-                                moment().month(this.props.currentMonth).subtract(1, 'months').isBefore('2019-08-01') ? 
-                                        this.props.deal.price
-                                    : 
-                                        this.props.deal.priceByHours ? 
-                                            this.props.deal.priceByHours
+                    <React.Fragment>
+                        <tr>
+                            <td>
+                                <div className="d-flex justify-content-between align-items-center">
+                                    <strong>{this.props.deal.name}</strong>
+                                    {tasks.length == 1 && statuses[tasks[0].status] ? <span className="badge badge-light badge-pill status">{statuses[tasks[0].status]}</span> : null}
+                                </div>
+                            </td>
+                            <td className="text-center">{this.props.dealTimeFormatted}</td>
+                            <td className="text-center">
+                                {
+                                    moment().month(this.props.currentMonth).subtract(1, 'months').isBefore('2019-08-01') ? 
+                                            this.props.deal.price
                                         : 
-                                            0
-                            }
-                        </td>
-                    </tr>
+                                            this.props.deal.priceByHours ? 
+                                                this.props.deal.priceByHours
+                                            : 
+                                                0
+                                }
+                            </td>
+                        </tr>
+                        <Tasks dealName={this.props.deal.name} {...{tasks, statuses}} />
+                    </React.Fragment>
                 :
                     <tr>
                         <td colSpan="3">Нет данных</td>
@@ -114,8 +116,8 @@ class DealsTable extends Component {
                     </tr>
                     <tr>
                         <th className="align-middle"><strong>Название</strong></th>
-                        <th className="align-middle" width="106"><strong>Затраченное время</strong></th>
-                        <th className="align-middle" width="65"><strong>Цена (руб)</strong></th>
+                        <th className="align-middle text-center" width="80"><strong>Время</strong></th>
+                        <th className="align-middle text-center" width="65"><strong>Цена</strong></th>
                     </tr>
                 </thead>
                 <tbody>{rows}</tbody>
