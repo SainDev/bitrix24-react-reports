@@ -4,6 +4,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import LoadingOverlay from 'react-loading-overlay';
 import { apiParams } from "../settings";
 import Header from './Header';
+import Footer from './Footer'
 import DealsTable from "./DealsTable";
 
 const hashstr = s => {
@@ -218,6 +219,7 @@ export default class AppComponent extends Component {
                         </Row>
                     </Container>
                 </main>
+                <Footer />
             </LoadingOverlay>
         );
         

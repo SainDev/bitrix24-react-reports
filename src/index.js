@@ -7,8 +7,10 @@ import Login from "./components/Login";
 import registerServiceWorker from './registerServiceWorker';
 /** Google Analitycs **/
 import ReactGA from 'react-ga';
-ReactGA.initialize('UA-22097078-6');
-ReactGA.pageview(window.location.pathname + window.location.search);
+if (process.env.NODE_ENV === 'production') {
+    ReactGA.initialize('UA-22097078-6');
+    ReactGA.pageview(window.location.pathname + window.location.search);
+}
 /**********************/
 
 ReactDOM.render(
