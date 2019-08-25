@@ -21,6 +21,24 @@ table {
     }
 
     td {
+        /*ul {
+            margin-top: 0.5rem;
+            margin-bottom: 0;
+
+            &.tasks {
+                li {
+                    padding-right: 2.75rem;
+
+                    .badge {
+                        &.status {
+                            position: absolute;
+                            right: .5rem;
+                        }
+                    }
+                }
+            }
+        }*/
+
         .badge {
             &.status {
                 .MuiSvgIcon-root {

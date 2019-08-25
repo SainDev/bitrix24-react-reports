@@ -3,11 +3,11 @@ const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 const path = require('path');
 
 module.exports = {
-    entry: "./src/index.js",
+    entry: path.resolve(__dirname, 'src', 'index.js'),
     output: {
         path: path.resolve(__dirname, 'dist'),
-        //publicPath: '/dist/',
-        filename: "main.js",
+        //publicPath: './',
+        filename: 'main.js',
         chunkFilename: '[name].bundle.js'
     },
     plugins: [
@@ -39,11 +39,10 @@ module.exports = {
             {
                 test: /\.(scss)$/,
                 use: [
-                    process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader,
+                    'style-loader',
                     {
                         loader: "css-loader",
                         options: {
-                            //modules: true, //bootstrap не пашет
                             //sourceMap: true,
                             //minimize: true,
                             //url: false
@@ -62,9 +61,13 @@ module.exports = {
                     },
                     "sass-loader"
                 ]
-            }, {
-                test: /\.(png|svg|jpg|gif)$/,
-                use: ["file-loader"]
+            },
+            {
+                test: /\.(png|svg|jpe?g|gif)$/i,
+                loader: 'file-loader',
+                options: {
+                    //outputPath: 'assets',
+                },
             }
         ]
     },

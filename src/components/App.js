@@ -69,7 +69,8 @@ export default class AppComponent extends Component {
                     { title: 'Название', field: 'name' },
                     { title: 'Затраченное время', field: 'timeFull' },
                     { title: 'Сумма (руб)', field: 'price' }
-                ]
+                ],
+                payed: false,
             },
             currentMonth: moment().month(),
             beginDate: moment().subtract(2, 'months').endOf('month').format('DD.MM.YYYY'),
@@ -104,14 +105,24 @@ export default class AppComponent extends Component {
             .then((responseData) => {
                 let table = this.state.table;
                 table.data = [];
+                table.payed = false;
 
-                responseData.result.map((deal) => {
-                    table.data.push({
-                        id: deal.ID,
-                        name: deal.TITLE.trim(),
-                        price: parseInt(deal.OPPORTUNITY)
+                if (responseData.total > 0) {
+                    table.payed = true;
+
+                    responseData.result.map((deal) => {
+                        if (deal.STAGE_ID.localeCompare('WON') !== 0) {
+                            table.payed = false;
+                        }
+
+                        table.data.push({
+                            id: deal.ID,
+                            name: deal.TITLE.trim(),
+                            price: parseInt(deal.OPPORTUNITY),
+                            complete: deal.STAGE_ID.localeCompare('WON') !== 0 ? false : true,
+                        });
                     });
-                });
+                }
 
                 return table;
             },
@@ -155,7 +166,6 @@ export default class AppComponent extends Component {
 
                                 this.setState({
                                     table: table,
-                                    isLoaded: true
                                 });
                             },
                             (error) => {
@@ -165,13 +175,11 @@ export default class AppComponent extends Component {
                                 })
                             });
                     });
-                } else {
-                    this.setState({
-                        isLoaded: true
-                    })
                 }
-
-                return table;
+            }).then(() => {
+                this.setState({
+                    isLoaded: true
+                });
             });
     }
 
@@ -186,7 +194,7 @@ export default class AppComponent extends Component {
     }
 
     render() {
-        const { toPrevMonth, toNextMonth, toMigavto, to5koleso } = this;
+        const { toPrevMonth, toNextMonth } = this;
         const { error, isLoaded, table, currentMonth } = this.state;
 
         return (

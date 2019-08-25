@@ -1,7 +1,6 @@
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const MinifyPlugin = require('terser-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
@@ -79,7 +78,8 @@ module.exports = merge(common, {
         }),
         new HtmlWebpackPlugin({
             title: 'Отчеты SainDev',
-            template: 'src/html/index.html',
+            template: require('path').resolve(__dirname, 'src/html', 'index.html'),
+            filename: './index.html',
             'meta': {
                 'mobile-web-app-capable': 'yes',
                 'apple-mobile-web-app-capable': 'yes',
@@ -88,10 +88,6 @@ module.exports = merge(common, {
                 'msapplication-starturl': '/',
                 'viewport': 'width=device-width, initial-scale=1, shrink-to-fit=no',
             }
-        }),
-        new MiniCssExtractPlugin({
-            filename: "[name].css",
-            chunkFilename: "[id].css"
         })
     ],
 });

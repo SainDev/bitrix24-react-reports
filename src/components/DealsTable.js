@@ -13,7 +13,7 @@ class DealsRow extends Component {
     render() {
         const tasks = this.props.deal.tasks || [];
         const statuses = {
-            1: null,
+            1: <Pause className="text-warning" />,
             2: <Pause className="text-warning" />,
             3: <PlayArrow className="text-primary" />,
             4: null,
@@ -23,39 +23,30 @@ class DealsRow extends Component {
         };
 
         return (
-            this.props.isLoaded ?
-                Object.keys(this.props.deal).length > 0 ?
-                    <React.Fragment>
-                        <tr>
-                            <td>
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <strong>{this.props.deal.name}</strong>
-                                    {tasks.length == 1 && statuses[tasks[0].status] ? <span className="badge badge-light badge-pill status">{statuses[tasks[0].status]}</span> : null}
-                                </div>
-                            </td>
-                            <td className="text-center">{this.props.dealTimeFormatted}</td>
-                            <td className="text-center">
-                                {
-                                    moment().month(this.props.currentMonth).subtract(1, 'months').isBefore('2019-08-01') ? 
-                                            this.props.deal.price
-                                        : 
-                                            this.props.deal.priceByHours ? 
-                                                this.props.deal.priceByHours
-                                            : 
-                                                0
-                                }
-                            </td>
-                        </tr>
-                        <Tasks dealName={this.props.deal.name} {...{tasks, statuses}} />
-                    </React.Fragment>
-                :
+
+                <React.Fragment>
                     <tr>
-                        <td colSpan="3">Нет данных</td>
+                        <td>
+                            <div className="d-flex justify-content-between align-items-center">
+                                <strong>{this.props.deal.name}</strong>
+                                {tasks.length == 1 && statuses[tasks[0].status] ? <span className="badge badge-light badge-pill status">{statuses[tasks[0].status]}</span> : null}
+                            </div>
+                        </td>
+                        <td className="text-center">{this.props.deal.timeFull ? new Date(this.props.deal.timeFull * 1000).toISOString().substr(11, 8) : null}</td>
+                        <td className="text-center">
+                            {
+                                moment().month(this.props.currentMonth).subtract(1, 'months').isBefore('2019-08-01') ? 
+                                        this.props.deal.price
+                                    : 
+                                        this.props.deal.priceByHours ? 
+                                            this.props.deal.priceByHours
+                                        : 
+                                            0
+                            }
+                        </td>
                     </tr>
-            :
-                <tr>
-                    <td colSpan="3"><Skeleton /></td>
-                </tr>
+                    <Tasks dealName={this.props.deal.name} {...{tasks, statuses}} />
+                </React.Fragment>
         );
     }
 }
@@ -70,18 +61,13 @@ class DealsTable extends Component {
 
         if (this.props.table.data.length > 0) {
             this.props.table.data.map((deal, i) => {
-                let dealTimeFormatted = null;
-
                 if (deal.timeFull) {
-                    dealTimeFormatted = new Date(deal.timeFull * 1000).toISOString().substr(11, 8);
                     fullTime += parseInt(deal.timeFull);
                 }
 
                 rows.push(
                     <DealsRow
-                        isLoaded={this.props.isLoaded}
                         deal={deal}
-                        dealTimeFormatted={dealTimeFormatted}
                         currentMonth={this.props.currentMonth}
                         key={i} />
                 );
@@ -91,13 +77,6 @@ class DealsTable extends Component {
                     fullPriceByHours += parseInt(deal.priceByHours);
                 }
             });
-        } else {
-            rows.push(
-                <DealsRow
-                    isLoaded={this.props.isLoaded}
-                    deal={{}}
-                    key={1} />
-            );
         }
 
         return (
@@ -120,10 +99,36 @@ class DealsTable extends Component {
                         <th className="align-middle text-center" width="65"><strong>Цена</strong></th>
                     </tr>
                 </thead>
-                <tbody>{rows}</tbody>
+                <tbody>
+                    {
+                        this.props.isLoaded ?
+                            rows.length > 0 ?
+                                rows
+                            :
+                                <tr>
+                                    <td colSpan="3">Нет данных</td>
+                                </tr>
+                        :
+                            <tr>
+                                <td colSpan="3"><Skeleton /></td>
+                            </tr>
+                    }
+                </tbody>
                 <tbody>
                     <tr>
-                        <th>Итого</th>
+                        <th>
+                            <div className="d-flex justify-content-between align-items-center">
+                                <strong>Итого</strong>
+                                {
+                                    rows.length > 0 ?
+                                        <span className="badge badge-light badge-pill status">
+                                            {this.props.table.payed ? <span className="text-success">Оплачено</span> : <span className="text-warning">Не оплачено</span>}
+                                        </span>
+                                    :
+                                        null
+                                }
+                            </div>
+                        </th>
                         <th className="text-center">{fullTime ? new Date(fullTime * 1000).toISOString().substr(11, 8) : null}</th>
                         <th className="text-center">
                             {
