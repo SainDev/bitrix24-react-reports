@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import moment from "moment";
-import { Modal, Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import LoadingOverlay from 'react-loading-overlay';
 import { apiParams } from "../settings";
 import Header from './Header';
@@ -210,11 +210,7 @@ export default class AppComponent extends Component {
                             <Col lg={12} tag="section">
                                 {
                                     error ? 
-                                        <Modal size="sm" aria-labelledby="contained-modal-title-vcenter" centered show onHide={() => {}}>
-                                            <Modal.Body>
-                                                <div>Ошибка: {error.message}</div>
-                                            </Modal.Body>
-                                        </Modal>
+                                        <div>Ошибка: {error.message}</div>
                                     :
                                         <DealsTable {...{isLoaded, table, currentMonth, toPrevMonth, toNextMonth}} />
                                 }
