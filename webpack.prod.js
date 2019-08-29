@@ -3,9 +3,10 @@ const merge = require('webpack-merge');
 const MinifyPlugin = require('terser-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const CnameWebpackPlugin = require('cname-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const common = require('./webpack.common.js');
 
 module.exports = merge(common, {
@@ -55,6 +56,22 @@ module.exports = merge(common, {
         new CopyWebpackPlugin([
             { from: 'src/assets', to: 'assets' },
         ]),
+        new CnameWebpackPlugin({
+            domain: 'report.saindev.ru',
+          }),
+        new HtmlWebpackPlugin({
+            title: 'Отчеты SainDev',
+            template: require('path').resolve(__dirname, 'src/html', 'index.html'),
+            filename: './index.html',
+            'meta': {
+                'mobile-web-app-capable': 'yes',
+                'apple-mobile-web-app-capable': 'yes',
+                'application-name': 'Отчеты SainDev',
+                'apple-mobile-web-app-title': 'Отчеты SainDev',
+                'msapplication-starturl': '/',
+                'viewport': 'width=device-width, initial-scale=1, shrink-to-fit=no',
+            }
+        }),
         new ManifestPlugin({
             fileName: 'asset-manifest.json', // Not to confuse with manifest.json
         }),
@@ -76,18 +93,5 @@ module.exports = merge(common, {
             navigateFallback: '/index.html',
             staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/],
         }),
-        new HtmlWebpackPlugin({
-            title: 'Отчеты SainDev',
-            template: require('path').resolve(__dirname, 'src/html', 'index.html'),
-            filename: './index.html',
-            'meta': {
-                'mobile-web-app-capable': 'yes',
-                'apple-mobile-web-app-capable': 'yes',
-                'application-name': 'Отчеты SainDev',
-                'apple-mobile-web-app-title': 'Отчеты SainDev',
-                'msapplication-starturl': '/',
-                'viewport': 'width=device-width, initial-scale=1, shrink-to-fit=no',
-            }
-        })
     ],
 });
