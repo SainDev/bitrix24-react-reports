@@ -8,7 +8,7 @@ const Footer = () => (
     <footer style={{marginTop: 20}}>
         <Container className="text-center">
             <small className="text-muted">&copy; 2019 SainDev</small>
-            {process.env.NODE_ENV === 'production' ? <YMInitializer accounts={[55057024]} options={{webvisor: true}} /> : null}
+            {process.env.NODE_ENV === 'production' ? <YMInitializer accounts={[55057024]} options={{webvisor: true}} version="2" /> : null}
         </Container>
     </footer>
 );

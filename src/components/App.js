@@ -57,9 +57,6 @@ export default class AppComponent extends Component {
     constructor(props) {
         super(props);
 
-        const queryString = require('query-string');
-        let queryParams = queryString.parse(location.search);
-
         this.state = {
             error: null,
             isLoaded: false,
