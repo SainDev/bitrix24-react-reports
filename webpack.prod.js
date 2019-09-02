@@ -3,10 +3,9 @@ const merge = require('webpack-merge');
 const MinifyPlugin = require('terser-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const CnameWebpackPlugin = require('cname-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ManifestPlugin = require('webpack-manifest-plugin');
-const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
+const { GenerateSW } = require('workbox-webpack-plugin');
+const CnameWebpackPlugin = require('cname-webpack-plugin');
 const common = require('./webpack.common.js');
 
 module.exports = merge(common, {
@@ -56,9 +55,6 @@ module.exports = merge(common, {
         new CopyWebpackPlugin([
             { from: 'src/assets', to: 'assets' },
         ]),
-        new CnameWebpackPlugin({
-            domain: 'report.saindev.ru',
-          }),
         new HtmlWebpackPlugin({
             title: 'Отчеты SainDev',
             template: require('path').resolve(__dirname, 'src/html', 'index.html'),
@@ -72,26 +68,14 @@ module.exports = merge(common, {
                 'viewport': 'width=device-width, initial-scale=1, shrink-to-fit=no',
             }
         }),
-        new ManifestPlugin({
-            fileName: 'asset-manifest.json', // Not to confuse with manifest.json
-        }),
-        new SWPrecacheWebpackPlugin({
-            // By default, a cache-busting query parameter is appended to requests
-            // used to populate the caches, to ensure the responses are fresh.
-            // If a URL is already hashed by Webpack, then there is no concern
-            // about it being stale, and the cache-busting can be skipped.
-            dontCacheBustUrlsMatching: /\.\w{8}\./,
-            filename: 'service-worker.js',
-            logger(message) {
-                if (message.indexOf('Total precache size is') === 0) {
-                    // This message occurs for every build and is a bit too noisy.
-                    return;
-                }
-                console.log(message);
-            },
-            minify: true, // minify and uglify the script
+        new GenerateSW({
+            clientsClaim: true,
+            skipWaiting: true,
+            offlineGoogleAnalytics: true,
             navigateFallback: '/index.html',
-            staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/],
+        }),
+        new CnameWebpackPlugin({
+            domain: 'report.saindev.ru',
         }),
     ],
 });
