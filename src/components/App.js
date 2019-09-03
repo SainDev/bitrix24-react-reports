@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import moment from "moment";
 import { Container, Row, Col } from "react-bootstrap";
 import LoadingOverlay from 'react-loading-overlay';
-import { apiParams } from "../settings";
+import b24FetchData from '../utils/bitrix24FetchData';
 import Header from './Header';
 import Footer from './Footer'
 import DealsTable from "./DealsTable";
@@ -89,105 +89,25 @@ export default class AppComponent extends Component {
     toPrevMonth() {this.switchMonth(-1);}
     toNextMonth() {this.switchMonth(1);}
 
-    async getTasks(beginDate, closeDate) {
-        await cachedFetch(
-                apiParams.apiUrl + apiParams.apiKey
-                + '/crm.deal.list/?order[BEGINDATE]=ASC&filter[%3EBEGINDATE]='
-                + (beginDate ? beginDate : this.state.beginDate)
-                + '&filter[%3CCLOSEDATE]='
-                + (closeDate ? closeDate : this.state.closeDate)
-                + '&filter[COMPANY_ID]='
-                +  localStorage.getItem('cId')
-            )
-            .then((r) => r.json())
-            .then((responseData) => {
-                let table = this.state.table;
-                table.data = [];
-                table.payed = false;
-
-                if (responseData.total > 0) {
-                    table.payed = true;
-
-                    responseData.result.map((deal) => {
-                        if (deal.STAGE_ID.localeCompare('WON') !== 0) {
-                            table.payed = false;
-                        }
-
-                        table.data.push({
-                            id: deal.ID,
-                            name: deal.TITLE.trim(),
-                            price: parseInt(deal.OPPORTUNITY),
-                            complete: deal.STAGE_ID.localeCompare('WON') !== 0 ? false : true,
-                        });
-                    });
-                }
-
-                return table;
-            },
-            (error) => {
+    componentDidMount() {
+        b24FetchData(this.state)
+            .then((fetchData) => {
                 this.setState({
                     isLoaded: true,
-                    error
+                    ...fetchData
                 })
-            }).then((table) => {
-                if (table.data.length > 0) {
-                    table.data.map((deal, i) => {
-                        cachedFetch(
-                                apiParams.apiUrl + apiParams.apiKey 
-                                + '/tasks.task.list/?order[REAL_STATUS]=ASC&filter[UF_CRM_TASK]=D_'
-                                + deal.id
-                            )
-                            .then((r) => r.json())
-                            .then((responseData) => {
-                                table.data[i].tasks = [];
-                                table.data[i].timeFull = 0;
-
-                                responseData.result.tasks.map((task, j) => {
-                                    if (task.timeSpentInLogs) {
-                                        table.data[i].timeFull += parseInt(task.timeSpentInLogs);
-                                    }
-                                    table.data[i].tasks.push({
-                                        id: task.id,
-                                        name: task.title.replace('CRM: ', '').trim(),
-                                        time: task.timeSpentInLogs ? new Date(task.timeSpentInLogs * 1000).toISOString().substr(11, 8) : null,
-                                        status: task.status,
-                                    });
-                                });
-
-                                table.data[i].hours = table.data[i].timeFull/3600;
-                                table.data[i].priceByHours = table.data[i].hours <= 0 || table.data[i].name.substr(0, 9).localeCompare('Поддержка') == 0 ?
-                                        table.data[i].price
-                                    :
-                                        //Округление до десятков
-                                        Math.round((table.data[i].hours * parseInt(this.state.hoursRate)) / 10) * 10
-                                    ;
-
-                                this.setState({
-                                    table: table,
-                                });
-                            },
-                            (error) => {
-                                this.setState({
-                                    isLoaded: true,
-                                    error
-                                })
-                            });
-                    });
-                }
-            }).then(() => {
-                this.setState({
-                    isLoaded: true
-                });
             });
-    }
-
-    componentDidMount() {
-        this.getTasks();
     }
 
     componentDidUpdate(prevProps, prevState) {
         if (this.state.currentMonth !== prevState.currentMonth) {
-            this.getTasks();
+            b24FetchData(this.state)
+                .then((fetchData) => {
+                    this.setState({
+                        isLoaded: true,
+                        ...fetchData
+                    })
+                });
         }
     }
 
