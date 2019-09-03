@@ -56,9 +56,14 @@ async function getDeals (props) {
         + '&filter[%3CCLOSEDATE]='
         + props.closeDate
         + '&filter[COMPANY_ID]='
-        + localStorage.getItem('cId'));
+        + localStorage.getItem('cId'))
+        .then(res => res.json(), (error) => {
+            return {
+                error: error
+            }
+        });
 
-    return await r.json();
+    return await r;
 }
 
 async function getTasks (deals) {
@@ -70,7 +75,11 @@ async function getTasks (deals) {
             return await response.json();
         });
 
-        return Promise.all(promises).then(results => results.map(result => result.result.tasks))
+        return Promise.all(promises).then(results => results.map(result => result.result.tasks), (error) => {
+            return {
+                error: error
+            }
+        })
     } else {
         return []
     }
@@ -79,6 +88,13 @@ async function getTasks (deals) {
 async function processingData (props) {
     let deals = await getDeals(props)
     let tasks = await getTasks(deals)
+
+    if (deals.error) {
+        return deals;
+    }
+    if (tasks.error) {
+        return tasks;
+    }
 
     let table = props.table;
     table.data = [];
