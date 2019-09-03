@@ -19,7 +19,7 @@ const hashstr = s => {
 }
 
 const cachedFetch = async (url, options) => {
-    let expiry = 30 * 60 // 30 min default
+    let expiry = (process.env.NODE_ENV === 'production' ? 30 : 0.01) * 60 // 30 min default
     if (typeof options === 'number') {
         expiry = options
         options = undefined
@@ -31,7 +31,7 @@ const cachedFetch = async (url, options) => {
     let whenCached = localStorage.getItem(cacheKey + ':ts')
     if (cached !== null && whenCached !== null) {
         let age = (Date.now() - whenCached) / 1000
-        if (age < expiry) {
+        if (!navigator.onLine || age < expiry) {
             let response = new Response(new Blob([cached]))
             return Promise.resolve(response)
         } else {
