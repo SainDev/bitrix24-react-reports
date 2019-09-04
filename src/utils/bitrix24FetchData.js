@@ -1,5 +1,3 @@
-import React from 'react'
-import axios from "axios";
 import { apiParams } from "../settings";
 
 const hashstr = s => {
@@ -150,7 +148,7 @@ async function processingData (props) {
         });
     }
 
-    return table;
+    return await table;
 }
 
 export default function fetchData (props) {

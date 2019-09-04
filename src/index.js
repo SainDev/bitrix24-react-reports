@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./scss/App.scss";
-import auth from "./components/Auth";
+import auth from "./utils/Auth";
 import App from "./components/App";
 import Login from "./components/Login";
 import registerServiceWorker from './registerServiceWorker';

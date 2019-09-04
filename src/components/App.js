@@ -7,52 +7,6 @@ import Header from './Header';
 import Footer from './Footer'
 import DealsTable from "./DealsTable";
 
-const hashstr = s => {
-    let hash = 0;
-    if (s.length == 0) return hash;
-    for (let i = 0; i < s.length; i++) {
-        let char = s.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash;
-    }
-    return hash;
-}
-
-const cachedFetch = async (url, options) => {
-    let expiry = (process.env.NODE_ENV === 'production' ? 30 : 0.01) * 60 // 30 min default
-    if (typeof options === 'number') {
-        expiry = options
-        options = undefined
-    } else if (typeof options === 'object') {
-        expiry = options.seconds || expiry
-    }
-    let cacheKey = hashstr(url)
-    let cached = localStorage.getItem(cacheKey)
-    let whenCached = localStorage.getItem(cacheKey + ':ts')
-    if (cached !== null && whenCached !== null) {
-        let age = (Date.now() - whenCached) / 1000
-        if (!navigator.onLine || age < expiry) {
-            let response = new Response(new Blob([cached]))
-            return Promise.resolve(response)
-        } else {
-            localStorage.removeItem(cacheKey)
-            localStorage.removeItem(cacheKey + ':ts')
-        }
-    }
-
-    const response_1 = await fetch(url, options);
-    if (response_1.status === 200) {
-        let ct = response_1.headers.get('Content-Type');
-        if (ct && (ct.match(/application\/json/i) || ct.match(/text\//i))) {
-            response_1.clone().text().then(content => {
-                localStorage.setItem(cacheKey, content);
-                localStorage.setItem(cacheKey + ':ts', Date.now());
-            });
-        }
-    }
-    return response_1;
-}
-
 export default class AppComponent extends Component {
     constructor(props) {
         super(props);
@@ -65,8 +19,8 @@ export default class AppComponent extends Component {
                 data: [],
                 columns: [
                     { title: 'Название', field: 'name' },
-                    { title: 'Затраченное время', field: 'timeFull' },
-                    { title: 'Сумма (руб)', field: 'price' }
+                    { title: 'Время', field: 'timeFull' },
+                    { title: 'Цена', field: 'price' }
                 ],
                 payed: false,
             },

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
-import auth from "./Auth";
+import auth from "../utils/Auth";
 
 const Login = () => {
     return (
