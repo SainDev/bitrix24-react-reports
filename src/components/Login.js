@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
 import auth from "../utils/Auth";
+import Footer from './Footer'
 
 const Login = () => {
     return (
@@ -28,6 +29,7 @@ const Login = () => {
                             </Form>
                         </Card.Body>
                     </Card>
+                    <Footer />
                 </Col>
             </Row>
         </Container>

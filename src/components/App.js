@@ -20,7 +20,7 @@ export default class AppComponent extends Component {
                 columns: [
                     { title: 'Название', field: 'name' },
                     { title: 'Время', field: 'timeFull' },
-                    { title: 'Цена', field: 'price' }
+                    { title: 'Цена', field: 'priceByHours' }
                 ],
                 payed: false,
             },
