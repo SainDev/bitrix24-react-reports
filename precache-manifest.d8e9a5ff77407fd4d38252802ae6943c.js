@@ -47,11 +47,11 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "assets/manifest.json"
   },
   {
-    "revision": "f57438958cce03b839c6",
+    "revision": "9faa13d757aa9542784e",
     "url": "main.js"
   },
   {
-    "revision": "2a62b533df5530fc78f8c87d9669f6db",
+    "revision": "7bcd98163cc6da40e01ad345a1d6e142",
     "url": "main.js.LICENSE"
   }
 ]);
