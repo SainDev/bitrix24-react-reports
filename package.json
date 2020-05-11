@@ -48,7 +48,7 @@
     "bootstrap": "^4.4.1",
     "bootswatch": "^4.4.1",
     "history": "^4.10.1",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "material-table": "^1.57.2",
     "moment": "^2.24.0",
     "query-string": "^6.11.1",
