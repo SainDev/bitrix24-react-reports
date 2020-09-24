@@ -51,12 +51,12 @@ module.exports = {
                     {
                         loader: 'postcss-loader',
                         options: {
-                            plugins: function () {
-                                return [
-                                    require('precss'),
-                                    require('autoprefixer')
-                                ];
-                            }
+                            postcssOptions: {
+                                plugins: [
+                                    'precss',
+                                    'autoprefixer',
+                                ],
+                            },
                         }
                     },
                     "sass-loader"

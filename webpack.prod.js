@@ -1,5 +1,5 @@
 const webpack = require('webpack');
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const MinifyPlugin = require('terser-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -52,9 +52,11 @@ module.exports = merge(common, {
             },
         }),
         new CleanWebpackPlugin(),
-        new CopyWebpackPlugin([
-            { from: 'src/assets', to: 'assets' },
-        ]),
+        new CopyWebpackPlugin({
+            patterns: [
+                { from: 'src/assets', to: 'assets' },
+            ],
+        }),
         new HtmlWebpackPlugin({
             title: 'Отчеты SainDev',
             template: require('path').resolve(__dirname, 'src/html', 'index.html'),
