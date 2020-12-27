@@ -69,7 +69,8 @@ async function getTasks (deals) {
         const promises = deals.result.map(async (item) => {
             const response = await cachedFetch(apiParams.apiUrl + apiParams.apiKey
                 + '/tasks.task.list/?order[REAL_STATUS]=ASC&filter[UF_CRM_TASK]=D_'
-                + item.ID);
+                + item.ID
+                + '&select[]=UF_CRM_TASK&select[]=TIME_SPENT_IN_LOGS&select[]=ID&select[]=TITLE&select[]=REAL_STATUS');
             return await response.json();
         });
 
