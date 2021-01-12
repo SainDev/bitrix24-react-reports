@@ -130,13 +130,15 @@ async function processingData (props) {
                     status: task.status,
                 });
             });
-    
+
+            let dealDate = new Date(deal.CLOSEDATE).getFullYear();
+
             dealData.hours = dealData.timeFull/3600;
             dealData.priceByHours = dealData.hours <= 0 || deal.TITLE.trim().substr(0, 9).localeCompare('Поддержка') == 0 ?
                     parseInt(deal.OPPORTUNITY)
                 :
                     //Округление до десятков
-                    Math.round((dealData.hours * parseInt(props.hoursRate)) / 10) * 10
+                    Math.round((dealData.hours * parseInt(dealDate > 2020 ? props.hoursRate + 100 : props.hoursRate)) / 10) * 10
                 ;
 
             table.data.push({
